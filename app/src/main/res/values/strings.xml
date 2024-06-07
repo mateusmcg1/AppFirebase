@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">App Firebase</string>
+    <string name="EditTextEmailLogin">Email</string>
+    <string name="EditTextSenhaLogin">Senha</string>
+    <string name="TextViewCadastrarLogin">Criar Conta</string>
+    <string name="TextViewRecuperarLogin">Recuperar Conta</string>
+</resources>
