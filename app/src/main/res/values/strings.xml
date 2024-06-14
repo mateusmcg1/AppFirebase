@@ -4,4 +4,9 @@
     <string name="EditTextSenhaLogin">Senha</string>
     <string name="TextViewCadastrarLogin">Criar Conta</string>
     <string name="TextViewRecuperarLogin">Recuperar Conta</string>
+    <string name="TextViewCadastrarCadastro">Cadastrar Novo Usuario</string>
+    <string name="EditTextNomeCadastro">Nome</string>
+    <string name="EditTextEmailCadastro">Email</string>
+    <string name="TextViewRepeteSenhaCadastro">Repetir senha</string>
+    <string name="ButtonCadastrarCadastro">Cadastrar</string>
 </resources>
