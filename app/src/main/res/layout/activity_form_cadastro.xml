@@ -105,7 +105,7 @@
         app:layout_constraintStart_toStartOf="@id/containerComponentsCadastro"
         />
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bt_logar"
+        android:id="@+id/bt_cadastrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/Button"
