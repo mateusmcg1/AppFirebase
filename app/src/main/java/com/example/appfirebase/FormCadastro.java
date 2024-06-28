@@ -1,5 +1,6 @@
 package com.example.appfirebase;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -37,6 +38,9 @@ import java.util.Map;
 public class FormCadastro extends AppCompatActivity {
     private ImageButton imageButtonVoltar;
     private String usuarioId;
+
+    private static final String TAG = "Debugando";
+
     private EditText edit_nome, edit_email, edit_senha, edit_senha2;
     private AppCompatButton bt_cadastrar;
     private final String [] msgs = {
@@ -49,7 +53,6 @@ public class FormCadastro extends AppCompatActivity {
         this.iniciarComponentes();
         this.voltarLogin();
         this.gerenciarCadastro();
-
 
         }
         public void voltarLogin(){
@@ -81,13 +84,13 @@ public class FormCadastro extends AppCompatActivity {
                 String senha2 = edit_senha2.getText().toString();
     //validar campos nao preenchidos
                 if(nome.isEmpty() || email.isEmpty() || senha.isEmpty() || senha2.isEmpty()){
-                    Snackbar objSnackbar = Snackbar.make(view, msgs[0], Snackbar.LENGTH_SHORT);
+                    @SuppressLint("ShowToast") Snackbar objSnackbar = Snackbar.make(view, msgs[0], Snackbar.LENGTH_SHORT);
                     objSnackbar.setBackgroundTint(Color.WHITE);
                     objSnackbar.setTextColor(Color.BLACK);
                     objSnackbar.show();
                 }//validar senha == senha 2
                 else if(!senha.equals(senha2)){
-                    Snackbar objSnackbar = Snackbar.make(view, msgs[2], Snackbar.LENGTH_SHORT);
+                    @SuppressLint("ShowToast") Snackbar objSnackbar = Snackbar.make(view, msgs[2], Snackbar.LENGTH_SHORT);
                     objSnackbar.setBackgroundTint(Color.WHITE);
                     objSnackbar.setTextColor(Color.BLACK);
                     objSnackbar.show();
@@ -98,7 +101,7 @@ public class FormCadastro extends AppCompatActivity {
         });
         }
 
-        private void cadastrarUser(View view, String email, String senha){
+        public void cadastrarUser(View view, String email, String senha){
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, senha).addOnCompleteListener(
                     new OnCompleteListener<AuthResult>() {
                         @Override
@@ -114,6 +117,8 @@ public class FormCadastro extends AppCompatActivity {
                                             @Override
                                             public void run() {
                                                 Intent objIntent = new Intent(FormCadastro.this, FormLogin.class);
+                                                startActivity(objIntent);
+                                                finish();
                                             }//fim runn
                                         }
                             , 3000);
@@ -130,7 +135,7 @@ public class FormCadastro extends AppCompatActivity {
                                 }catch(Exception e){
                                     erro = "Erro ao cadastrara usuario!";
                                 }
-                                Snackbar objSnackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
+                                @SuppressLint("ShowToast") Snackbar objSnackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
                                 objSnackbar.setBackgroundTint(Color.WHITE);
                                 objSnackbar.setTextColor(Color.BLACK);
                                 objSnackbar.show();
@@ -151,7 +156,7 @@ public class FormCadastro extends AppCompatActivity {
                     new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
-                            Log.d("d","Sucesso ao salvar dados");
+                            Log.d("db_success","Sucesso ao salvar dados");
                         }
                     }).addOnFailureListener(
                     new OnFailureListener() {
