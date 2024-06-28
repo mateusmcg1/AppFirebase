@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,18 +19,27 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class FormCadastro extends AppCompatActivity {
     private ImageButton imageButtonVoltar;
+    private String usuarioId;
     private EditText edit_nome, edit_email, edit_senha, edit_senha2;
     private AppCompatButton bt_cadastrar;
-    private String [] msgs = {
+    private final String [] msgs = {
             "Prencha todos os campos", "Cadastro realizado com sucesso!", "Senhas não são iguais"
     };
     @Override
@@ -94,7 +104,7 @@ public class FormCadastro extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                                this.salvarDadosUsuario();
+                                salvarDadosUsuario();
                                 Snackbar objSnackbar = Snackbar.make(view, msgs[1], Snackbar.LENGTH_SHORT);
                                 objSnackbar.setBackgroundTint(Color.WHITE);
                                 objSnackbar.setTextColor(Color.BLACK);
@@ -111,14 +121,45 @@ public class FormCadastro extends AppCompatActivity {
                                 String erro="";
                                 try{
                                     throw task.getException();
-                                }catch(FirebaseAuthWeakPasswordException){
+                                }catch(FirebaseAuthWeakPasswordException e){
                                     erro = "Digite uma senha com 6 caracteres ou mais";
-                                }catch(FirebaseAuthUserCollisionException){
-
+                                }catch(FirebaseAuthUserCollisionException e){
+                                    erro = "Já existe conta vinculada ao email";
+                                }catch(FirebaseAuthInvalidCredentialsException e){
+                                    erro = "Email inválido";
+                                }catch(Exception e){
+                                    erro = "Erro ao cadastrara usuario!";
                                 }
+                                Snackbar objSnackbar = Snackbar.make(view, erro, Snackbar.LENGTH_SHORT);
+                                objSnackbar.setBackgroundTint(Color.WHITE);
+                                objSnackbar.setTextColor(Color.BLACK);
+                                objSnackbar.show();
                             }
                         }
+
                     }
             );//fim complete listener
+        }
+        public void salvarDadosUsuario(){
+        String nome = edit_nome.getText().toString();
+            FirebaseFirestore db=FirebaseFirestore.getInstance();
+            Map<String,Object> usuario = new HashMap<>();
+            usuario.put("nome", nome);
+            usuarioId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DocumentReference documentReference = db.collection("Usuarios").document(usuarioId);
+            documentReference.set(usuario).addOnSuccessListener(
+                    new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Log.d("d","Sucesso ao salvar dados");
+                        }
+                    }).addOnFailureListener(
+                    new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("db_error", "Erro ao salvar dados"+ e.getMessage());
+                        }
+                    }
+            );
         }
     }
