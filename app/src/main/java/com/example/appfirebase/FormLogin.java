@@ -35,8 +35,11 @@ public class FormLogin extends AppCompatActivity {
         //coloque depois do setContentView(R.layout.activity_form_login)
         this.iniciarComponentes();
         this.chamaTelaCadastro();
+        this.chamarTelaRecuperarConta();
         this.login();
+
     }//fim onCreate
+
     protected void onStart(){
         super.onStart();
         FirebaseUser usuarioCorrente= FirebaseAuth.getInstance().getCurrentUser();
@@ -44,6 +47,7 @@ public class FormLogin extends AppCompatActivity {
             chamarTelaPrincipal();
         }//fim if
     }
+
     //metodo para capturar e tratar o evento de logar
     public void login(){
         bt_logar.setOnClickListener(
@@ -98,6 +102,18 @@ public class FormLogin extends AppCompatActivity {
                 }//fim OnCompleteListener<AuthResult>()
         );//fim addOnCompleteListener
     }//fim autenticarusuario
+
+    public void chamarTelaRecuperarConta(){
+        TextTelaRecuperarConta=findViewById(R.id.EditTextRecuperarLogin);
+        TextTelaRecuperarConta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent= new Intent(FormLogin.this, RecuperarConta.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }//fim chamarTelaRecuperarConta
 
     public void chamarTelaPrincipal(){
         Intent intent= new Intent(FormLogin.this, TelaPrincipal.class);
